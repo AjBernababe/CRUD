@@ -1,0 +1,3 @@
+When testing with '.load' inside node, 
+ESM(import) is not supported.
+Use 'require'
