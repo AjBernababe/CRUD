@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+export const categories = ['fruit', 'vegetable', 'dairy']
+
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -13,10 +15,8 @@ const productSchema = new mongoose.Schema({
     category: {
         type: String,
         lowercase: true,
-        enum: ['fruit', 'vegetable', 'dairy']
+        enum: categories
     }
 })
 
-const Product = mongoose.model('Product', productSchema);
-
-export default Product;
+export const Product = mongoose.model('Product', productSchema);

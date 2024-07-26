@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import methodOverride from "method-override";
 
 //Models
-import Product from "./models/product.js";
+import { Product, categories } from "./models/product.js";
 
 //Dynamic Path
 import path from 'path';
@@ -47,7 +47,7 @@ app.get('/products', async (req, res) => {
 
 //Create New Product
 app.get('/products/new', (req, res) => {
-    res.render('products/new')
+    res.render('products/new', { categories })
 })
 app.post('/products', async (req, res) => {
     const { name, price, category } = req.body;
@@ -81,7 +81,7 @@ app.get('/products/:id/edit', async (req, res) => {
     const { id } = req.params;
     try {
         const product = await Product.findById(id)
-        res.render('products/edit', { product })
+        res.render('products/edit', { product, categories })
     }
     catch {
         res.send('<h1>PRODUCT NOT FOUND</h1>')

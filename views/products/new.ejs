@@ -13,11 +13,11 @@
       <input type="number" name="price" step="0.01" id="price" /><br />
       <label for="category">Category:</label>
       <select name="category" id="category">
-        <option value="fruit">Fruit</option>
-        <option value="vegetable">Vegetable</option>
-        <option value="dairy">Dairy</option></select
-      ><br />
-
+        <% for(let category of categories){ %>
+        <option value="<%= category %>"><%= category %></option>
+        <% } %>
+      </select>
+      <br />
       <button type="submit">Create Product</button>
     </form>
   </body>
