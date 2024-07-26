@@ -35,7 +35,7 @@ app.use(methodOverride('_method'));
 
 //Homepage
 app.get('/', (req, res) => {
-    res.send("WELCOME TO IRON NIGGER")
+    res.send("WELCOME TO ╒ÄüÄ)¥◄")
 })
 
 //Show all products
