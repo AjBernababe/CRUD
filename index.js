@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 
 //Show all products
 app.get('/products', async (req, res) => {
-    const products = await Product.find({})
+    const products = await Product.find(req.query && req.query)
 
     res.render('products/index', { products })
 })
@@ -87,7 +87,6 @@ app.get('/products/:id/edit', async (req, res) => {
         res.send('<h1>PRODUCT NOT FOUND</h1>')
     }
 })
-
 app.put('/products/:id', async (req, res) => {
     const { id } = req.params
     const { name, price, category } = req.body;
@@ -103,6 +102,12 @@ app.put('/products/:id', async (req, res) => {
         res.redirect('/products')
 })
 
+//Delete product
+app.delete('/products/:id', async (req, res) => {
+    const { id } = req.params
+    await Product.findByIdAndDelete(id)
+    res.redirect('/products')
+})
 // #endregion
 
 //PORT

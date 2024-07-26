@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit</title>
-  </head>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit</title>
+</head>
+
+<body>
+
   <body>
-    <body>
-        <h1>Edit Product</h1>
-        <form action="/products/<%=product.id%>?_method=PUT" method="POST">
-            <label for="name">Name:</label>
-            <input type="text" name="name" id="name" value="<%=product.name%>"/> <br />
-            <label for="price">Price:</label>
-            <input type="number" name="price" step="0.01" id="price" value="<%=product.price%>"/><br />
-            <label for="category">Category:</label>
-            <select name="category" id="category">
-              <% for(let category of categories){ %>
-                <option value="<%= category %>" <%= product.category == category && 'selected' %>><%= category %></option>
-                <% } %>
-            ><br />
-      
-            <button type="submit">Edit Product</button>
-          </form>
-          <br>
-          <a href="/products/<%=product.id%>">Cancel</a>
+    <h1>Edit Product</h1>
+    <form action="/products/<%=product.id%>?_method=PUT" method="POST">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" value="<%=product.name%>" /> <br />
+      <label for="price">Price:</label>
+      <input type="number" name="price" step="0.01" id="price" value="<%=product.price%>" /><br />
+      <label for="category">Category:</label>
+      <select name="category" id="category">
+        <% for(let category of categories){ %>
+        <option value="<%= category %>" <%= product.category == category && 'selected' %>><%= category %></option>
+        <% } %>
+      </select>
+      <br />
+
+      <button type="submit">Edit Product</button>
+    </form>
+    <br>
+    <a href="/products/<%=product.id%>">Cancel</a>
   </body>
+
 </html>
