@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import methodOverride from "method-override";
+import { AppError } from "./AppError.js";
+import { wrapAsync } from "./utils/wrapAsync.js";
 
 //Models
 import { Product, categories } from "./models/product.js";
@@ -39,68 +41,65 @@ app.get('/', (req, res) => {
 })
 
 //Show all products
-app.get('/products', async (req, res) => {
+app.get('/products', wrapAsync(async (req, res, next) => {
+
     const products = await Product.find(req.query && req.query)
 
     res.render('products/index', { products })
-})
+}))
 
 //Create New Product
 app.get('/products/new', (req, res) => {
     res.render('products/new', { categories })
 })
-app.post('/products', async (req, res) => {
+//
+app.post('/products', wrapAsync(async (req, res, next) => {
     const { name, price, category } = req.body;
-    if (name && price && category) {
-        const product = new Product({
-            name,
-            price,
-            category
-        })
-        await product.save()
-        res.redirect(`/products/${product.id}`)
-    }
-    else
-        res.redirect('/products')
-})
+
+    const product = new Product({
+        name,
+        price,
+        category
+    })
+    await product.save()
+    res.redirect(`/products/${product.id}`)
+
+}))
 
 //Show product
-app.get('/products/:id', async (req, res) => {
+app.get('/products/:id', wrapAsync(async (req, res, next) => {
     const { id } = req.params;
-    try {
-        const product = await Product.findById(id)
-        res.render('products/show', { product })
+    const product = await Product.findById(id)
+
+    if (!product) {
+        throw new AppError('PRODUCT NOT FOUND', 402)
     }
-    catch {
-        res.send('<h1>PRODUCT NOT FOUND</h1>')
-    }
-})
+    res.render('products/show', { product })
+}))
 
 //Edit product
-app.get('/products/:id/edit', async (req, res) => {
+app.get('/products/:id/edit', wrapAsync(async (req, res, next) => {
     const { id } = req.params;
-    try {
-        const product = await Product.findById(id)
-        res.render('products/edit', { product, categories })
+
+    const product = await Product.findById(id)
+    if (!product) {
+        throw new AppError('PRODUCT NOT FOUND', 402)
     }
-    catch {
-        res.send('<h1>PRODUCT NOT FOUND</h1>')
-    }
-})
-app.put('/products/:id', async (req, res) => {
+    res.render('products/edit', { product, categories })
+
+}))
+//
+app.put('/products/:id', wrapAsync(async (req, res, next) => {
     const { id } = req.params
     const { name, price, category } = req.body;
-    if (name && price && category) {
-        await Product.findByIdAndUpdate(id, {
-            name,
-            price,
-            category
-        }, { runValidators: true })
-        res.redirect(`/products/${id}`)
-    }
-    else
-        res.redirect('/products')
-})
+
+    await Product.findByIdAndUpdate(id, {
+        name,
+        price,
+        category
+    }, { runValidators: true })
+    res.redirect(`/products/${id}`)
+}))
 
 //Delete product
 app.delete('/products/:id', async (req, res) => {
@@ -109,6 +108,11 @@ app.delete('/products/:id', async (req, res) => {
     res.redirect('/products')
 })
 // #endregion
+
+app.use((err, req, res, next) => {
+    const { message = "Something went wrong", status = 500 } = err;
+    res.status(status).send(message);
+})
 
 //PORT
 app.listen(8080, () => {
