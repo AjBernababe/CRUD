@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const farmSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
   city: String,
   email: String,
   products: [
